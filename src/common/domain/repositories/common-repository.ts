@@ -16,7 +16,7 @@ export type FindOutput<Model> = {
   filter: string | null;
 };
 
-export interface BaseRepository<Model, CreateProps> {
+export interface CommonRepository<Model, CreateProps> {
   create(data: CreateProps): Model;
   insert(model: Model): Promise<Model>;
   find(data: FindInput): Promise<FindOutput<Model>>;
