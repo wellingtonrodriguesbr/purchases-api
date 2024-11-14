@@ -21,6 +21,6 @@ export interface CommonRepository<Model, CreateProps> {
   insert(model: Model): Promise<Model>;
   find(data: FindInput): Promise<FindOutput<Model>>;
   findById(id: string): Promise<Model>;
-  update(id: string, model: Model): Promise<Model>;
+  update(model: Model): Promise<Model>;
   delete(id: string): Promise<void>;
 }
