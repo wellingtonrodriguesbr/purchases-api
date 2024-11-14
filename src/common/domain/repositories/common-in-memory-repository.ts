@@ -85,7 +85,7 @@ export abstract class CommonInMemoryRepository<Model extends ModelProps>
     per_page: number,
   ): Promise<Model[]> {
     const start = (page - 1) * per_page;
-    const limit = page * per_page;
+    const limit = page + per_page;
 
     return items.slice(start, limit);
   }
