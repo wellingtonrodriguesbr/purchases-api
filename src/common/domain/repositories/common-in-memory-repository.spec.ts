@@ -54,34 +54,68 @@ describe("CommonInMemoryRepository Unit Tests", () => {
     };
   });
 
-  it("should create a new model", async () => {
-    const model = sut.create(props);
-    expect(model).toEqual(expect.objectContaining(model));
-  });
-
-  it("should insert a new model", async () => {
-    const model = await sut.insert(props);
-    expect(model).toEqual(expect.objectContaining(model));
-  });
-
-  it("should find by id a model", async () => {
-    const data = await sut.insert(model);
-    const result = await sut.findById(data.id);
-    expect(model).toEqual(expect.objectContaining(result));
-  });
-
-  it("should throw an error when model not found", async () => {
-    await expect(sut.findById("fake-id")).rejects.toBeInstanceOf(NotFoundError);
-  });
-
-  it("should update a model", async () => {
-    const data = await sut.insert(model);
-    const result = await sut.update({
-      ...data,
-      name: "Product 1 Updated",
-      price: 20.99,
+  describe("Create", () => {
+    it("should create a new model", async () => {
+      const model = sut.create(props);
+      expect(model).toEqual(expect.objectContaining(model));
     });
-    expect(result.name).toEqual("Product 1 Updated");
-    expect(result.price).toEqual(20.99);
+  });
+
+  describe("Insert", () => {
+    it("should insert a new model", async () => {
+      const model = await sut.insert(props);
+      expect(model).toEqual(expect.objectContaining(model));
+    });
+  });
+
+  describe("FindById", () => {
+    it("should find by id a model", async () => {
+      const data = await sut.insert(model);
+      const result = await sut.findById(data.id);
+      expect(model).toEqual(expect.objectContaining(result));
+    });
+
+    it("should throw an error when model not found", async () => {
+      await expect(sut.findById("fake-id")).rejects.toBeInstanceOf(
+        NotFoundError,
+      );
+    });
+  });
+
+  describe("Update", () => {
+    it("should update a model", async () => {
+      const data = await sut.insert(model);
+      const result = await sut.update({
+        ...data,
+        name: "Product 1 Updated",
+        price: 20.99,
+      });
+      expect(result.name).toEqual("Product 1 Updated");
+      expect(result.price).toEqual(20.99);
+    });
+
+    it("should not update a model when not found", async () => {
+      const model = {
+        id: "fake-id",
+        name: "Product 1 Updated",
+        price: 20.99,
+        quantity: 10,
+        created_at,
+        updated_at,
+      };
+      await expect(sut.update(model)).rejects.toBeInstanceOf(NotFoundError);
+    });
+  });
+
+  describe("Delete", () => {
+    it("should delete a model", async () => {
+      const data = await sut.insert(model);
+      await sut.delete(data.id);
+      expect(sut.items).toHaveLength(0);
+    });
+
+    it("should not delete a model when not found", async () => {
+      await expect(sut.delete("fake-id")).rejects.toBeInstanceOf(NotFoundError);
+    });
   });
 });
