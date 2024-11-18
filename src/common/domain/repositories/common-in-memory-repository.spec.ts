@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { CommonInMemoryRepository } from "./common-in-memory-repository";
+import { NotFoundError } from "@/common/domain/errors/not-found-error";
 
 type StubModelProps = {
   id: string;
@@ -61,5 +62,15 @@ describe("CommonInMemoryRepository Unit Tests", () => {
   it("should insert a new model", async () => {
     const model = await sut.insert(props);
     expect(model).toEqual(expect.objectContaining(model));
+  });
+
+  it("should find by id a model", async () => {
+    const data = await sut.insert(model);
+    const result = await sut.findById(data.id);
+    expect(model).toEqual(expect.objectContaining(result));
+  });
+
+  it("should throw an error when model not found", async () => {
+    await expect(sut.findById("fake-id")).rejects.toBeInstanceOf(NotFoundError);
   });
 });
