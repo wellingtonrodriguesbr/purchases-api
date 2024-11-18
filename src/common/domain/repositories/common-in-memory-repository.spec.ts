@@ -118,4 +118,59 @@ describe("CommonInMemoryRepository Unit Tests", () => {
       await expect(sut.delete("fake-id")).rejects.toBeInstanceOf(NotFoundError);
     });
   });
+
+  describe("ApplyFilter", () => {
+    it("should no filter items when filter is null", async () => {
+      const items = [model];
+      const spyFilter = jest.spyOn(items, "filter" as any);
+      const result = await sut["applyFilter"](items, null);
+      expect(result).toStrictEqual(items);
+      expect(spyFilter).not.toHaveBeenCalled();
+    });
+
+    it("should filter items", async () => {
+      const items = [
+        {
+          id: randomUUID(),
+          name: "Product 1",
+          price: 10.99,
+          quantity: 10,
+          created_at,
+          updated_at,
+        },
+        {
+          id: randomUUID(),
+          name: "PRODUCT 2",
+          price: 20.99,
+          quantity: 20,
+          created_at,
+          updated_at,
+        },
+        {
+          id: randomUUID(),
+          name: "test",
+          price: 1.99,
+          quantity: 1,
+          created_at,
+          updated_at,
+        },
+      ];
+      const spyFilter = jest.spyOn(items, "filter" as any);
+      let result = await sut["applyFilter"](items, "Product");
+      expect(result).toStrictEqual([items[0], items[1]]);
+      expect(spyFilter).toHaveBeenCalledTimes(1);
+
+      result = await sut["applyFilter"](items, "PRODUCT");
+      expect(result).toStrictEqual([items[0], items[1]]);
+      expect(spyFilter).toHaveBeenCalledTimes(2);
+
+      result = await sut["applyFilter"](items, "test");
+      expect(result).toStrictEqual([items[2]]);
+      expect(spyFilter).toHaveBeenCalledTimes(3);
+
+      result = await sut["applyFilter"](items, "no-filter");
+      expect(result).toHaveLength(0);
+      expect(spyFilter).toHaveBeenCalledTimes(4);
+    });
+  });
 });
