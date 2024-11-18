@@ -73,4 +73,15 @@ describe("CommonInMemoryRepository Unit Tests", () => {
   it("should throw an error when model not found", async () => {
     await expect(sut.findById("fake-id")).rejects.toBeInstanceOf(NotFoundError);
   });
+
+  it("should update a model", async () => {
+    const data = await sut.insert(model);
+    const result = await sut.update({
+      ...data,
+      name: "Product 1 Updated",
+      price: 20.99,
+    });
+    expect(result.name).toEqual("Product 1 Updated");
+    expect(result.price).toEqual(20.99);
+  });
 });
