@@ -221,4 +221,40 @@ describe("CommonInMemoryRepository Unit Tests", () => {
       expect(result).toStrictEqual([items[2], items[1], items[0]]);
     });
   });
+
+  describe("ApplyPaginate", () => {
+    it("should paginate items", async () => {
+      const items = [
+        {
+          id: randomUUID(),
+          name: "Product 1",
+          price: 10.99,
+          quantity: 10,
+          created_at,
+          updated_at,
+        },
+        {
+          id: randomUUID(),
+          name: "Product 2",
+          price: 20.99,
+          quantity: 20,
+          created_at,
+          updated_at,
+        },
+        {
+          id: randomUUID(),
+          name: "Product 3",
+          price: 1.99,
+          quantity: 1,
+          created_at,
+          updated_at,
+        },
+      ];
+      let result = await sut["applyPaginate"](items, 1, 2);
+      expect(result).toStrictEqual([items[0], items[1]]);
+
+      result = await sut["applyPaginate"](items, 2, 2);
+      expect(result).toStrictEqual([items[2]]);
+    });
+  });
 });
