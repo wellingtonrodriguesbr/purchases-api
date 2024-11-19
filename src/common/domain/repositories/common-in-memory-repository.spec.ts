@@ -173,4 +173,52 @@ describe("CommonInMemoryRepository Unit Tests", () => {
       expect(spyFilter).toHaveBeenCalledTimes(4);
     });
   });
+
+  describe("ApplySort", () => {
+    it("should no sort items when sort is null or not in sortable fields", async () => {
+      const items = [model];
+      const spySort = jest.spyOn(items, "sort" as any);
+      let result = await sut["applySort"](items, null, null);
+      expect(result).toStrictEqual(items);
+      expect(spySort).not.toHaveBeenCalled();
+
+      result = await sut["applySort"](items, "id", "asc");
+      expect(result).toStrictEqual(items);
+      expect(spySort).not.toHaveBeenCalled();
+    });
+
+    it("should sort items", async () => {
+      const items = [
+        {
+          id: randomUUID(),
+          name: "ATest",
+          price: 10.99,
+          quantity: 10,
+          created_at,
+          updated_at,
+        },
+        {
+          id: randomUUID(),
+          name: "BTest",
+          price: 20.99,
+          quantity: 20,
+          created_at,
+          updated_at,
+        },
+        {
+          id: randomUUID(),
+          name: "CTest",
+          price: 1.99,
+          quantity: 1,
+          created_at,
+          updated_at,
+        },
+      ];
+      let result = await sut["applySort"](items, "name", "asc");
+      expect(result).toStrictEqual([items[0], items[1], items[2]]);
+
+      result = await sut["applySort"](items, "name", "desc");
+      expect(result).toStrictEqual([items[2], items[1], items[0]]);
+    });
+  });
 });
