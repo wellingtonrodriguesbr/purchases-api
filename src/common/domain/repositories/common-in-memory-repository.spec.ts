@@ -65,6 +65,7 @@ describe("CommonInMemoryRepository Unit Tests", () => {
     it("should insert a new model", async () => {
       const model = await sut.insert(props);
       expect(model).toEqual(expect.objectContaining(model));
+      expect(sut.items).toHaveLength(1);
     });
   });
 
@@ -255,6 +256,82 @@ describe("CommonInMemoryRepository Unit Tests", () => {
 
       result = await sut["applyPaginate"](items, 2, 2);
       expect(result).toStrictEqual([items[2]]);
+
+      result = await sut["applyPaginate"](items, 3, 2);
+      expect(result).toStrictEqual([]);
+    });
+  });
+
+  describe("Find", () => {
+    it("should find items", async () => {
+      const items = Array(16).fill(model);
+
+      sut.items = items;
+
+      let result = await sut.find({});
+      expect(result).toStrictEqual({
+        items: Array(15).fill(model),
+        total: 16,
+        current_page: 1,
+        per_page: 15,
+        sort: null,
+        sort_dir: null,
+        filter: null,
+      });
+    });
+
+    it("should apply paginate and filter", async () => {
+      const items = [
+        {
+          id: randomUUID(),
+          name: "Product 1",
+          price: 10.99,
+          quantity: 10,
+          created_at,
+          updated_at,
+        },
+        {
+          id: randomUUID(),
+          name: "TEST",
+          price: 20.99,
+          quantity: 20,
+          created_at,
+          updated_at,
+        },
+        {
+          id: randomUUID(),
+          name: "test",
+          price: 1.99,
+          quantity: 1,
+          created_at,
+          updated_at,
+        },
+        {
+          id: randomUUID(),
+          name: "Test",
+          price: 1.99,
+          quantity: 1,
+          created_at,
+          updated_at,
+        },
+      ];
+
+      sut.items = items;
+
+      let result = await sut.find({
+        page: 1,
+        per_page: 2,
+        filter: "test",
+      });
+      expect(result).toStrictEqual({
+        items: [items[1], items[2]],
+        total: 3,
+        current_page: 1,
+        per_page: 2,
+        sort: null,
+        sort_dir: null,
+        filter: "test",
+      });
     });
   });
 });
