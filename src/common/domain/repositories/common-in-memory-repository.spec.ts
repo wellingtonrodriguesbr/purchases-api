@@ -16,17 +16,12 @@ export class StubInMemoryRepository extends CommonInMemoryRepository<StubModelPr
     super();
     this.sortableFields = ["name"];
   }
-  protected async applyFilter(
-    items: StubModelProps[],
-    filter: string | null,
-  ): Promise<StubModelProps[]> {
+  protected async applyFilter(items: StubModelProps[], filter: string | null): Promise<StubModelProps[]> {
     if (!filter) {
       return items;
     }
 
-    return items.filter(item =>
-      item.name.toLowerCase().includes(filter.toLowerCase()),
-    );
+    return items.filter(item => item.name.toLowerCase().includes(filter.toLowerCase()));
   }
 }
 
@@ -77,9 +72,7 @@ describe("CommonInMemoryRepository Unit Tests", () => {
     });
 
     it("should throw an error when model not found", async () => {
-      await expect(sut.findById("fake-id")).rejects.toBeInstanceOf(
-        NotFoundError,
-      );
+      await expect(sut.findById("fake-id")).rejects.toBeInstanceOf(NotFoundError);
     });
   });
 

@@ -2,27 +2,16 @@ import { ConflictError } from "@/common/domain/errors/conflict-error";
 import { NotFoundError } from "@/common/domain/errors/not-found-error";
 import { CommonInMemoryRepository } from "@/common/domain/repositories/common-in-memory-repository";
 import { ProductModel } from "@/products/domain/models/products-model";
-import {
-  ProductId,
-  ProductsRepository,
-} from "@/products/domain/repositories/products-repository";
+import { ProductId, ProductsRepository } from "@/products/domain/repositories/products-repository";
 
-export class ProductsInMemoryRepository
-  extends CommonInMemoryRepository<ProductModel>
-  implements ProductsRepository
-{
+export class ProductsInMemoryRepository extends CommonInMemoryRepository<ProductModel> implements ProductsRepository {
   sortableFields: string[] = ["name", "created_at"];
-  protected async applyFilter(
-    items: ProductModel[],
-    filter: string | null,
-  ): Promise<ProductModel[]> {
+  protected async applyFilter(items: ProductModel[], filter: string | null): Promise<ProductModel[]> {
     if (!filter) {
       return items;
     }
 
-    return items.filter(item =>
-      item.name.toLowerCase().includes(filter.toLowerCase()),
-    );
+    return items.filter(item => item.name.toLowerCase().includes(filter.toLowerCase()));
   }
 
   protected async applySort(

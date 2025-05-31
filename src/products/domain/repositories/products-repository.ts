@@ -14,8 +14,7 @@ export type CreateProductProps = {
   updated_at: Date;
 };
 
-export interface ProductsRepository
-  extends CommonRepository<ProductModel, CreateProductProps> {
+export interface ProductsRepository extends CommonRepository<ProductModel, CreateProductProps> {
   findByName(name: string): Promise<ProductModel>;
   findAllByIds(productIds: ProductId[]): Promise<ProductModel[]>;
   conflictingName(name: string): Promise<void>;

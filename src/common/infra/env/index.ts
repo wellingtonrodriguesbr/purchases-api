@@ -4,9 +4,7 @@ import { z } from "zod";
 import { AppError } from "@/common/domain/errors/app-error";
 
 const envSchema = z.object({
-  NODE_ENV: z
-    .enum(["development", "test", "production"])
-    .default("development"),
+  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   PORT: z.coerce.number().default(3333),
   API_URL: z.string().default("http://localhost:3333"),
   DB_TYPE: z.literal("postgres").default("postgres"),

@@ -41,11 +41,7 @@ export abstract class CommonInMemoryRepository<Model extends ModelProps>
 
     const filteredItems = await this.applyFilter(this.items, filter);
     const itemsSorted = await this.applySort(filteredItems, sort, sort_dir);
-    const itemsPaginated = await this.applyPaginate(
-      itemsSorted,
-      page,
-      per_page,
-    );
+    const itemsPaginated = await this.applyPaginate(itemsSorted, page, per_page);
 
     return {
       items: itemsPaginated,
@@ -58,16 +54,9 @@ export abstract class CommonInMemoryRepository<Model extends ModelProps>
     };
   }
 
-  protected abstract applyFilter(
-    items: Model[],
-    filter: string | null,
-  ): Promise<Model[]>;
+  protected abstract applyFilter(items: Model[], filter: string | null): Promise<Model[]>;
 
-  protected async applySort(
-    items: Model[],
-    sort: string | null,
-    sort_dir: string | null,
-  ): Promise<Model[]> {
+  protected async applySort(items: Model[], sort: string | null, sort_dir: string | null): Promise<Model[]> {
     if (!sort || !this.sortableFields.includes(sort)) {
       return items;
     }
@@ -79,11 +68,7 @@ export abstract class CommonInMemoryRepository<Model extends ModelProps>
     });
   }
 
-  protected async applyPaginate(
-    items: Model[],
-    page: number,
-    per_page: number,
-  ): Promise<Model[]> {
+  protected async applyPaginate(items: Model[], page: number, per_page: number): Promise<Model[]> {
     const start = (page - 1) * per_page;
     const limit = start + per_page;
 

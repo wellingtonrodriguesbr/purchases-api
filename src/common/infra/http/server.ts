@@ -7,7 +7,7 @@ dataSource
   .initialize()
   .then(() => {
     app.listen(env.PORT, () => {
-      console.log(`Server is running on port ${env.PORT}! 🚀`);
+      console.log(`Server is running on port ${env.PORT}! 🔥`);
     });
   })
   .catch(err => console.error("Error during Data Source initialization", err));
